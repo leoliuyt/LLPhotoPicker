@@ -11,50 +11,13 @@ import Photos
 
 struct GroupAsset {
     var collection: PHAssetCollection
-    var count: Int
-//    var image: UIImage
-    var collectionTitle: String {
-        get{
-            return localizedString(title: collection.localizedTitle)
-        }
-    }
-    func localizedString(title: String?) -> String {
-        if let string = title {
-            switch string {
-            case "Videos":
-                return "视频"
-            case "Panoramas":
-                return "全景照"
-            case "Slo-mo":
-                return "高速摄影慢动作解析"
-            case "Favorites":
-                return "我的收藏"
-            case "Time-lapse":
-                return "延时视频"
-            case "Bursts":
-                return "连拍照"
-            case "Recently Added":
-                return "最近添加"
-            case "Hidden":
-                return "隐藏"
-            case "Camera Roll":
-                return "相机胶卷"
-            case "Selfies":
-                return "自拍照"
-            case "Screenshots":
-                return "屏幕截图"
-            default:
-                return ""
-            }
-        } else {
-            return ""
-        }
-    }
+    var groupFetchResult: PHFetchResult<PHAsset>
+    var collectionTitle: String
 }
 
 class ViewController: UIViewController {
     
-    var group:Array<Any> = []
+    var group:Array<GroupAsset> = []
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -71,6 +34,7 @@ class ViewController: UIViewController {
     }
     
     func test1() {
+        self.group.removeAll()
         let fetchOption: PHFetchOptions = PHFetchOptions()
         //case album //相册
         //case smartAlbum //智能相册(内容动态更新 如最近添加)
@@ -102,25 +66,11 @@ class ViewController: UIViewController {
                 print("collectionTitle name:\(collection.localizedTitle!)")
                 let albumItemResult: PHFetchResult = PHAsset.fetchAssets(in: collection, options: fetchOption)
                 if albumItemResult.count > 0 {
-                    let groupAsset = GroupAsset(collection: collection, count: albumItemResult.count)
+                   let groupAsset = GroupAsset(collection: collection, groupFetchResult: albumItemResult, collectionTitle: self.localizedString(title: collection.localizedTitle))
                     self.group.append(groupAsset)
                 }
             }
         })
-        
-//        let otherResult: PHFetchResult = PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.smartAlbum, subtype: PHAssetCollectionSubtype.any, options: nil)
-//        otherResult.enumerateObjects({ (collection, index, bool) in
-//            if collection.isKind(of: PHAssetCollection.self) {
-//                print("other collectionTitle name:\(collection.localizedTitle!)")
-//                //                let result: PHFetchResult = PHAsset.fetchAssets(in: collection, options: fetchOption)
-//                //                result.enumerateObjects({ (asset, index, bool) in
-//                //                    print("\(asset)")
-//                //
-//                //                })
-//            }
-//        })
-        
-        
         // 用户创建的相册
         // 列出所有用户创建的相册
 //        PHFetchResult *topLevelUserCollections = [PHCollectionList fetchTopLevelUserCollectionsWithOptions:nil];
@@ -131,11 +81,54 @@ class ViewController: UIViewController {
                 let albumItemResult: PHFetchResult = PHAsset.fetchAssets(in: collection as! PHAssetCollection, options: fetchOption)
                 //每个相册中资源数
                 if albumItemResult.count > 0 {
-                   let groupAsset = GroupAsset(collection: collection as! PHAssetCollection, count: albumItemResult.count)
+                    let groupAsset = GroupAsset(collection: collection as! PHAssetCollection, groupFetchResult: albumItemResult, collectionTitle: collection.localizedTitle!)
                     self.group.append(groupAsset)
                 }
             }
         })
+        
+        print("-------------")
+        
+        for value in self.group {
+            print("name:\(value.collectionTitle)")
+//            print(value.groupFetchResult)
+            value.groupFetchResult.enumerateObjects({ (asset, index, bool) in
+                print("width:\(asset.pixelWidth),height:\(asset.pixelHeight)")
+            })
+        }
+    }
+    
+    func localizedString(title: String?) -> String {
+        if let string = title {
+            switch string {
+            case "Videos":
+                return "视频"
+            case "Panoramas":
+                return "全景照"
+            case "Slo-mo":
+                return "高速摄影慢动作解析"
+            case "Favorites":
+                return "我的收藏"
+            case "Time-lapse":
+                return "延时视频"
+            case "Bursts":
+                return "连拍照"
+            case "Recently Added":
+                return "最近添加"
+            case "Hidden":
+                return "隐藏"
+            case "Camera Roll":
+                return "相机胶卷"
+            case "Selfies":
+                return "自拍照"
+            case "Screenshots":
+                return "屏幕截图"
+            default:
+                return ""
+            }
+        } else {
+            return ""
+        }
     }
 }
 
