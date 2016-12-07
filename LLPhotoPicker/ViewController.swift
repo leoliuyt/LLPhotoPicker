@@ -16,11 +16,13 @@ struct GroupAsset {
 }
 
 class ViewController: UIViewController {
+    @IBOutlet weak var tableView: UITableView!
     
     var group:Array<GroupAsset> = []
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        loadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -30,10 +32,10 @@ class ViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event);
-        test1();
+//        test1();
     }
     
-    func test1() {
+    func loadData(){
         self.group.removeAll()
         let fetchOption: PHFetchOptions = PHFetchOptions()
         //case album //相册
@@ -96,6 +98,8 @@ class ViewController: UIViewController {
                 print("width:\(asset.pixelWidth),height:\(asset.pixelHeight)")
             })
         }
+        
+        tableView.reloadData()
     }
     
     func localizedString(title: String?) -> String {
@@ -130,5 +134,39 @@ class ViewController: UIViewController {
             return ""
         }
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let destination = segue.destination as? LLImagePikcerViewController
+            else { fatalError("unexpected view controller for segue") }
+        
+        let indexPath = tableView!.indexPath(for: sender as! UITableViewCell)!
+        destination.groupAsset = self.group[indexPath.row]
+    }
 }
 
+extension ViewController:UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
+    }
+}
+
+extension ViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.group.count
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell:GroupAssetCell = tableView.dequeueReusableCell(withIdentifier: "GroupAssetCell") as! GroupAssetCell
+        cell.groupAsset = self.group[indexPath.row]
+        return cell
+    }
+}
