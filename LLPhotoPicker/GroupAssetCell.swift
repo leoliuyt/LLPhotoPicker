@@ -23,16 +23,9 @@ class GroupAssetCell: UITableViewCell {
                 options.deliveryMode = .highQualityFormat
                 options.resizeMode = .exact;
                 options.isNetworkAccessAllowed = false //不允许从iCloud 下载图片
-//                options.normalizedCropRect = thumbnailSize
-//                options.isNetworkAccessAllowed = true
-//                options.progressHandler = { progress, _, _, _ in
-//                    // Handler might not be called on the main queue, so re-dispatch for UI work.
-//                    DispatchQueue.main.sync {
-//                        self.progressView.progress = Float(progress)
-//                    }
-//                }
-                PHImageManager.default().requestImage(for: asset.groupFetchResult.firstObject!, targetSize: thumbnailSize, contentMode: .aspectFit, options: nil, resultHandler: {  [weak self] image, _ in
-                    print("image:\(image)")
+                //.aspectFill 和 .exact 配合 才能裁剪出想要的图片
+                //.aspectFit 让图片完整可见
+                PHImageManager.default().requestImage(for: asset.groupFetchResult.firstObject!, targetSize: thumbnailSize, contentMode: .aspectFill, options: options, resultHandler: {  [weak self] image, info in
                     self?.cover.image = image
                 })
             }
