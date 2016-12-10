@@ -19,13 +19,7 @@ class GroupAssetCell: UITableViewCell {
                 self.countLabel.text = String(asset.groupFetchResult.count)
                 let scale = UIScreen.main.scale
                 let thumbnailSize = CGSize(width: 70 * scale, height: 70 * scale)
-                let options = PHImageRequestOptions()
-                options.deliveryMode = .highQualityFormat
-                options.resizeMode = .exact;
-                options.isNetworkAccessAllowed = false //不允许从iCloud 下载图片
-                //.aspectFill 和 .exact 配合 才能裁剪出想要的图片
-                //.aspectFit 让图片完整可见
-                PHImageManager.default().requestImage(for: asset.groupFetchResult.firstObject!, targetSize: thumbnailSize, contentMode: .aspectFill, options: options, resultHandler: {  [weak self] image, info in
+                LLImageService.shareInstance.requestImage(for: asset.groupFetchResult.firstObject!, targetSize: thumbnailSize, resultHandler: {[weak self] image in
                     self?.cover.image = image
                 })
             }

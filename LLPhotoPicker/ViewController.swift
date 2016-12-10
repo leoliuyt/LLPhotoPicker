@@ -8,23 +8,48 @@
 
 import UIKit
 import Photos
-
-struct GroupAsset {
-    var collection: PHAssetCollection
-    var groupFetchResult: PHFetchResult<PHAsset>
-    var collectionTitle: String
-}
+import SnapKit
 
 class ViewController: UIViewController {
-    @IBOutlet weak var tableView: UITableView!
+//    @IBOutlet weak var tableView: UITableView!
     
     var group:Array<GroupAsset> = []
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor.white
         // Do any additional setup after loading the view, typically from a nib.
-        loadData()
+//        loadData()
+        
+//        let button: LLButton = LLButton(frame: CGRect(x:0, y:0, width:100, height:44), layoutTpe: .normal)
+        let button: LLButton = LLButton(type: .custom)
+        button.setTitle("test", for: .normal)
+        button.setTitleColor(UIColor.blue, for: .normal)
+        button.setImage(UIImage(named:"arraw_down"), for: .normal)
+        button.backgroundColor = UIColor.orange;
+//        button.addTarget(self, action: #selector(ArtLoginViewController.tapAction(_:), for: UIControlEventTouchUpInside)
+        button.addTarget(self, action: #selector(buttonClick(sender:)), for: UIControlEvents.touchUpInside)
+        view.addSubview(button)
+        button.snp.makeConstraints{ make in
+            make.left.equalTo(view)
+            make.top.equalTo(view).offset(64)
+            make.width.equalTo(100)
+            make.height.equalTo(44)
+        }
+        
+//        let btn: UIButton = UIButton(type: <#T##UIButtonType#>)
     }
 
+    func buttonClick(sender: LLButton) {
+        UIView.animate(withDuration: 0.3, animations:{
+            if let imageView = sender.imageView {
+                if imageView.transform.isIdentity {
+                    imageView.transform = CGAffineTransform(rotationAngle: -(CGFloat)(M_PI))
+                } else {
+                    imageView.transform = CGAffineTransform(rotationAngle: 0)
+                }
+            }
+        })
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -33,6 +58,13 @@ class ViewController: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event);
 //        test1();
+//        test()
+    }
+    
+    func test() {
+        let pickerVC: LLImagePikcerViewController = LLImagePikcerViewController()
+        let nav: UINavigationController = UINavigationController(rootViewController: pickerVC)
+        self.show(nav, sender: nil)
     }
     
     func loadData(){
@@ -68,7 +100,7 @@ class ViewController: UIViewController {
                 print("collectionTitle name:\(collection.localizedTitle!)")
                 let albumItemResult: PHFetchResult = PHAsset.fetchAssets(in: collection, options: fetchOption)
                 if albumItemResult.count > 0 {
-                   let groupAsset = GroupAsset(collection: collection, groupFetchResult: albumItemResult, collectionTitle: self.localizedString(title: collection.localizedTitle))
+                   let groupAsset = GroupAsset(collection: collection, groupFetchResult: albumItemResult, collectionTitle: collection.localizedTitle!)
                     self.group.append(groupAsset)
                 }
             }
@@ -93,80 +125,46 @@ class ViewController: UIViewController {
         
         for value in self.group {
             print("name:\(value.collectionTitle)")
-//            print(value.groupFetchResult)
             value.groupFetchResult.enumerateObjects({ (asset, index, bool) in
                 print("width:\(asset.pixelWidth),height:\(asset.pixelHeight)")
             })
         }
         
-        tableView.reloadData()
+//        tableView.reloadData()
     }
     
-    func localizedString(title: String?) -> String {
-        if let string = title {
-            switch string {
-            case "Videos":
-                return "视频"
-            case "Panoramas":
-                return "全景照"
-            case "Slo-mo":
-                return "高速摄影慢动作解析"
-            case "Favorites":
-                return "我的收藏"
-            case "Time-lapse":
-                return "延时视频"
-            case "Bursts":
-                return "连拍照"
-            case "Recently Added":
-                return "最近添加"
-            case "Hidden":
-                return "隐藏"
-            case "Camera Roll":
-                return "相机胶卷"
-            case "Selfies":
-                return "自拍照"
-            case "Screenshots":
-                return "屏幕截图"
-            default:
-                return ""
-            }
-        } else {
-            return ""
-        }
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let destination = segue.destination as? LLImagePikcerViewController
-            else { fatalError("unexpected view controller for segue") }
-        
-        let indexPath = tableView!.indexPath(for: sender as! UITableViewCell)!
-        destination.groupAsset = self.group[indexPath.row]
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        guard let destination = segue.destination as? LLImagePikcerViewController
+//            else { fatalError("unexpected view controller for segue") }
+//        
+//        let indexPath = tableView!.indexPath(for: sender as! UITableViewCell)!
+//        destination.groupAsset = self.group[indexPath.row]
+//    }
 }
 
-extension ViewController:UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
-    }
-}
-
-extension ViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.group.count
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:GroupAssetCell = tableView.dequeueReusableCell(withIdentifier: "GroupAssetCell") as! GroupAssetCell
-        cell.groupAsset = self.group[indexPath.row]
-        return cell
-    }
-}
+//extension ViewController:UITableViewDelegate {
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        tableView.deselectRow(at: indexPath, animated: true)
+//        
+//    }
+//    
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return 80
+//    }
+//}
+//
+//extension ViewController: UITableViewDataSource {
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return self.group.count
+//    }
+//    
+//    func numberOfSections(in tableView: UITableView) -> Int {
+//        return 1
+//    }
+//    
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell:GroupAssetCell = tableView.dequeueReusableCell(withIdentifier: "GroupAssetCell") as! GroupAssetCell
+//        cell.groupAsset = self.group[indexPath.row]
+//        return cell
+//    }
+//}
