@@ -1,12 +1,24 @@
 //
 //  LLButton.swift
-//  LLPhotoPicker
+//  LLButton
 //
-//  Created by lbq on 2016/12/9.
+//  Created by leoliu on 2016/12/11.
 //  Copyright © 2016年 LL. All rights reserved.
 //
 
 import UIKit
+
+extension UIButton {
+
+}
+
+private enum ButtonContentType : String {
+    case title
+    case titleColor
+    case shadowColor
+    case image
+    case backgroundImage
+}
 
 enum LLButtonLayoutType : Int{
     case normal,leftRight //左图右文
@@ -15,126 +27,317 @@ enum LLButtonLayoutType : Int{
     case bottomTop //下图上文
 }
 
-extension UIButton {
-    
-}
 
 class LLButton : UIControl {
-    
+
     var titleLabel: UILabel?
     var imageView: UIImageView?
     var backgroundImageView: UIImageView?
     
-    var contentEdgeInsets: UIEdgeInsets?
+    var contentEdgeInsets: UIEdgeInsets = UIEdgeInsets.zero
+    var titleEdgeInsets: UIEdgeInsets = UIEdgeInsets.zero
+    var imageEdgeInsets: UIEdgeInsets = UIEdgeInsets.zero
+    
+//    var reversesTitleShadowWhenHighlighted: Bool //false
+//    var adjustsImageWhenHighlighted: Bool //true
+//    var adjustsImageWhenDisabled: Bool //true
+//    var showsTouchWhenHighlighted: Bool //false
+    
+    var buttonType: UIButtonType?
+
+    var buttonLayoutType: LLButtonLayoutType?
+    private var contentDic: [String : [String : Any]] = [:]
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        makeUI()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    convenience init(type: UIButtonType) {
+    convenience init(type: LLButtonLayoutType = .normal) {
         self.init(frame: CGRect.zero)
+        buttonLayoutType = type
     }
     
-    // default is nil. title is assumed to be single line
-    func setTitle(_ title: String?, for state: UIControlState) {
-        if let text = title {
-            if let label = self.titleLabel {
-                label.text = text
-            } else {
-                titleLabel = UILabel()
-                titleLabel?.text = text
-                addSubview(titleLabel!)
-            }
-        } else {
-            titleLabel = nil;
-        }
-        setNeedsLayout()
-    }
-    
-    // default if nil. use opaque white
-    func setTitleColor(_ color: UIColor?, for state: UIControlState) {
-        self.titleLabel?.textColor = color
-    }
-    
-    // default is nil. should be same size if different for different states
-    func setImage(_ image: UIImage?, for state: UIControlState) {
-        if let img = image {
-            if let view = self.imageView {
-                view.image = image
-            } else {
-                imageView = UIImageView(image: img)
-                addSubview(imageView!)
-            }
-        } else {
-            imageView = nil
-        }
-        setNeedsLayout()
+    private func makeUI() {
+        titleLabel = UILabel()
+        imageView = UIImageView()
+        backgroundImageView = UIImageView()
+        
+//        titleLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
+        titleLabel?.lineBreakMode = NSLineBreakMode.byTruncatingMiddle
+        titleLabel?.backgroundColor = UIColor.clear;
+        titleLabel?.textAlignment = .left;
+        titleLabel?.shadowOffset = CGSize.zero;
+        
+        addSubview(backgroundImageView!)
+        addSubview(titleLabel!)
+        addSubview(imageView!)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         let bounds = self.bounds
-        let rect = contentRect(for: bounds)
-//        const CGRect bounds = self.bounds;
-//        const CGRect contentRect = [self contentRectForBounds:bounds];
-        self.backgroundImageView?.frame = contentRect(for: bounds)
-        self.titleLabel?.frame = titleRect(for: rect)
-        self.imageView?.frame = imageRect(for: rect)
+        let rect = contentRect(forBounds: bounds)
+        self.backgroundImageView?.frame = backgroundRect(forBounds: bounds)
+        self.titleLabel?.frame = titleRect(forContentRect: rect)
+        self.imageView?.frame = imageRect(forContentRect: rect)
+    }
+
+    func setTitle(_ title: String?, for state: UIControlState) {
+        setContent(title, for: state, type: ButtonContentType.title)
     }
     
-    func contentRect(for contentRect: CGRect) -> CGRect {
-        if let insets = contentEdgeInsets {
-            return UIEdgeInsetsInsetRect(contentRect, insets)
+    func setTitleColor(_ color: UIColor?, for state: UIControlState) {
+        setContent(color, for: state, type: ButtonContentType.titleColor)
+    }
+    
+    func setTitleShadowColor(_ color: UIColor?, for state: UIControlState) {
+        setContent(color, for: state, type: ButtonContentType.shadowColor)
+    }
+    
+    func setImage(_ image: UIImage?, for state: UIControlState) {
+        setContent(image, for: state, type: ButtonContentType.image)
+    }
+    
+    func setBackgroundImage(_ image: UIImage?, for state: UIControlState) {
+        setContent(image, for: state, type: ButtonContentType.backgroundImage)
+    }
+    
+    func setAttributedTitle(_ title: NSAttributedString?, for state: UIControlState) {
+        
+    }
+    
+    func title(for state: UIControlState) -> String? {
+        guard let value = defaultContentForState(for: state, type: ButtonContentType.title), let stringValue = value as? String
+        else {
+            return nil;
+        }
+        return stringValue
+    }
+    
+    func titleColor(for state: UIControlState) -> UIColor? {
+        guard let value = defaultContentForState(for: state, type: ButtonContentType.titleColor), let colorValue = value as? UIColor
+            else {
+                return nil;
+        }
+        return colorValue
+    }
+    
+    func titleShadowColor(for state: UIControlState) -> UIColor? {
+        guard let value = defaultContentForState(for: state, type: ButtonContentType.shadowColor), let shadowColorValue = value as? UIColor
+            else {
+                return nil;
+        }
+        return shadowColorValue
+    }
+    
+    func image(for state: UIControlState) -> UIImage? {
+        guard let value = defaultContentForState(for: state, type: ButtonContentType.image), let imageValue = value as? UIImage
+            else {
+                return nil;
+        }
+        return imageValue
+    }
+    
+    func backgroundImage(for state: UIControlState) -> UIImage? {
+        guard let value = defaultContentForState(for: state, type: ButtonContentType.backgroundImage), let backgroundImageValue = value as? UIImage
+            else {
+                return nil;
+        }
+        return backgroundImageValue
+    }
+    
+    func attributedTitle(for state: UIControlState) -> NSAttributedString? {
+//        guard let value = defaultContentForState(for: state, type: ButtonContentType.backgroundImage), let backgroundImageValue = value as? UIImage
+//            else {
+//                return nil;
+//        }
+//        return backgroundImageValue
+        return NSAttributedString()
+    }
+    
+// normal/highlighted/selected/disabled.
+    var currentTitle: String? {
+        return titleLabel?.text
+    }
+    
+    var currentTitleColor: UIColor {
+        if let color = titleLabel?.textColor {
+            return color
         } else {
-            return UIEdgeInsetsInsetRect(contentRect, UIEdgeInsets.zero)
+            return UIColor.white
         }
     }
     
-    func titleRect(for contentRect: CGRect) -> CGRect {
+    var currentTitleShadowColor: UIColor? {
+        return titleLabel?.shadowColor
+    }
+    
+    var currentImage: UIImage? {
+        return imageView?.image
+    }
+    
+    var currentBackgroundImage: UIImage? {
+        return backgroundImageView?.image
+    }
+    
+    var currentAttributedTitle: NSAttributedString? {
+        return titleLabel?.attributedText
+    }
+    
+    func backgroundRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds
+    }
+    
+    func contentRect(forBounds bounds: CGRect) -> CGRect {
+        return UIEdgeInsetsInsetRect(bounds, contentEdgeInsets)
+    }
+    
+    func titleRect(forContentRect contentRect: CGRect) -> CGRect {
         if (self.titleLabel?.text) != nil {
-            let size = imageSize()
+            let imgSize = imageSize()
             let labelSize = titleSize()
-//            let y = (max(size.height, labelSize.height) - labelSize.height)/2.0
-//            let frame = CGRect(x: 0, y: y, width: labelSize.width, height: max(size.height, labelSize.height))
-//            return frame
-//            UIEdgeInsets inset = _titleEdgeInsets;
             var inset: UIEdgeInsets = UIEdgeInsets()
-//            inset.left += size.width;
-            inset.right += size.width
+            if let type = buttonLayoutType {
+                switch type {
+                case .normal,.leftRight:
+                    inset.left += imgSize.width
+                case .rightLeft:
+                    inset.right += imgSize.width
+                case .topBottom:
+                    inset.top += imgSize.height
+                case .bottomTop:
+                    inset.bottom += imgSize.height
+                }
+            } else {
+                //default
+                inset.left += imgSize.width
+            }
             return componentRect(for: labelSize, contentRect: UIEdgeInsetsInsetRect(contentRect, inset))
         } else {
             return CGRect.zero
         }
     }
     
-    func imageRect(for contentRect: CGRect) -> CGRect {
+    func imageRect(forContentRect contentRect: CGRect) -> CGRect {
         if (self.imageView?.image) != nil {
-            let size = imageSize()
+            let imgSize = imageSize()
             let labelSize = titleSize()
-//            let x = labelSize.width > 0 ? (labelSize.width + 5 ): 0
-//            let y = (max(size.height, labelSize.height) - size.height)/2.0
-//            let frame = CGRect(x: x, y: y, width: size.width, height: size.height)
-//            return frame
             var inset: UIEdgeInsets = UIEdgeInsets()
-//            inset.right += labelSize.width;
-            inset.left = labelSize.width;
-            return componentRect(for: size, contentRect: UIEdgeInsetsInsetRect(contentRect, inset))
+            if let type = buttonLayoutType {
+                switch type {
+                case .normal,.leftRight:
+                    inset.right += labelSize.width
+                case .rightLeft:
+                    inset.left += labelSize.width
+                case .topBottom:
+                    inset.bottom += labelSize.height
+                case .bottomTop:
+                    inset.top += labelSize.height
+                }
+            } else {
+                inset.right = labelSize.width;
+            }
+            return componentRect(for: imgSize, contentRect: UIEdgeInsetsInsetRect(contentRect, inset))
         } else {
             return CGRect.zero
         }
     }
     
+//MARK:private
+    private func setContent(_ value: Any?, for state: UIControlState, type: ButtonContentType) {
+        let contentKey: String = type.rawValue
+        let typeKey = String(state.rawValue)
+        var typeContent = contentDic[contentKey]
+        guard var typeDic = typeContent else {
+            if let content = value {
+                typeContent = [typeKey:content]
+                contentDic[contentKey] = typeContent
+                updateContent()
+            }
+            return
+        }
+        
+        if let content = value {
+            typeDic[typeKey] = content
+            contentDic[contentKey] = typeDic
+        } else {
+            _ = typeDic.removeValue(forKey: typeKey)
+            if typeDic.values.count > 0 {
+                contentDic[contentKey] = typeDic
+            } else {
+                contentDic.removeValue(forKey: contentKey)
+            }
+        }
+        
+        updateContent()
+    }
     
-    func boundRect() -> CGRect {
-        let size = imageSize()
-        let labelSize = titleSize()
-        let width = size.width + 5 + labelSize.width
-        let frame = CGRect(x: 0, y: 0, width: width, height: max(size.height,labelSize.height))
-        return frame
+    private func updateContent(){
+        let state = self.state
+        
+        if let strTitle = title(for: state) {
+            if let label = titleLabel {
+                label.text = strTitle
+                label.textColor = titleColor(for: state)
+                label.shadowColor = titleShadowColor(for: state)
+            } else {
+                titleLabel = UILabel()
+                titleLabel?.text = strTitle
+                titleLabel?.textColor = titleColor(for: state)
+                titleLabel?.shadowColor = titleShadowColor(for: state)
+                addSubview(titleLabel!)
+            }
+        } else {
+            titleLabel?.removeFromSuperview()
+            titleLabel = nil
+        }
+
+        
+        if let image = contentForState(for: state, type: ButtonContentType.image), let img = image as? UIImage{
+            if let imgV = imageView {
+                imgV.image = img
+            } else {
+                imageView = UIImageView(image: img)
+                addSubview(imageView!)
+            }
+        } else {
+            imageView?.removeFromSuperview()
+            imageView = nil
+        }
+        
+        if let bgImage = contentForState(for: state, type: ButtonContentType.backgroundImage), let bgImg = bgImage as? UIImage{
+            if let imgV = backgroundImageView {
+                imgV.image = bgImg
+            } else {
+                backgroundImageView = UIImageView(image: bgImg)
+                addSubview(backgroundImageView!)
+                sendSubview(toBack: backgroundImageView!)
+            }
+        } else {
+            backgroundImageView?.removeFromSuperview()
+            backgroundImageView = nil
+        }
+         setNeedsLayout()
+    }
+    
+    private func contentForState(for state: UIControlState, type: ButtonContentType) -> Any? {
+        let contentKey: String = type.rawValue
+        let typeKey = String(state.rawValue)
+        return contentDic[contentKey]?[typeKey]
+    }
+    
+    private func defaultContentForState(for state: UIControlState, type: ButtonContentType) -> Any? {
+        
+        if let value = contentForState(for: state, type: type) {
+            return value
+        } else {
+            return contentForState(for: .normal, type: type)
+        }
     }
     
     private func titleSize() -> CGSize {
@@ -143,7 +346,7 @@ class LLButton : UIControl {
             let size = CGSize(width: 1000, height: 1000)
             let dict = [NSFontAttributeName:label.font,
                         NSBackgroundColorAttributeName:label.textColor
-                        ]
+            ]
             let labelSize = string.boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: dict, context: nil).size;
             return CGSize(width: ceil(labelSize.width) + 1, height: ceil(labelSize.height))
         } else {
@@ -159,32 +362,31 @@ class LLButton : UIControl {
         }
     }
     
-    // default is nil
-    open func setBackgroundImage(_ image: UIImage?, for state: UIControlState) {
-        
-    }
-    
     private func componentRect(for size: CGSize, contentRect: CGRect) -> CGRect {
         var rect: CGRect = CGRect.zero
         rect.origin = contentRect.origin
         rect.size = size
         
-        if rect.maxX > contentRect.maxX {
-            rect.size.width -= (rect.maxX - contentRect.maxX)
+        if let type = buttonLayoutType {
+            switch type {
+            case .normal,.leftRight,.rightLeft:
+                if rect.maxX > contentRect.maxX {
+                    rect.size.width -= (rect.maxX - contentRect.maxX)
+                }
+            case .topBottom,.bottomTop:
+                if rect.maxY > contentRect.maxY {
+                    rect.size.height -= (rect.maxY - contentRect.maxY)
+                }
+            }
+        } else {
+            if rect.maxX > contentRect.maxX {
+                rect.size.width -= (rect.maxX - contentRect.maxX)
+            }
         }
         rect.origin.x += CGFloat(floorf(Float(contentRect.size.width - rect.size.width)/2.0))
-        rect.origin.y += CGFloat(floorf(Float(contentRect.size.height - rect.size.height)/2.0));
+        rect.origin.y += CGFloat(floorf(Float(contentRect.size.height - rect.size.height)/2.0))
+        
         return rect
     }
-    
-//    static func UIEdgeInsetsInsetRect(rect: CGRect,insets: UIEdgeInsets) -> CGRect {
-//        var rt = rect
-//        rt.origin.x    += insets.left;
-//        rt.origin.y    += insets.top;
-//        rt.size.width  -= (insets.left + insets.right);
-//        rt.size.height -= (insets.top  + insets.bottom);
-//        return rt;
-//    }
 
 }
-

@@ -22,27 +22,34 @@ class ViewController: UIViewController {
 //        loadData()
         
 //        let button: LLButton = LLButton(frame: CGRect(x:0, y:0, width:100, height:44), layoutTpe: .normal)
-        let button: LLButton = LLButton(type: .custom)
-        button.setTitle("test", for: .normal)
+        let button: LLButton = LLButton(type: .rightLeft)
+        button.setTitle("abcdefghi", for: .normal)
         button.setTitleColor(UIColor.blue, for: .normal)
         button.setImage(UIImage(named:"arraw_down"), for: .normal)
         button.backgroundColor = UIColor.orange;
 //        button.addTarget(self, action: #selector(ArtLoginViewController.tapAction(_:), for: UIControlEventTouchUpInside)
         button.addTarget(self, action: #selector(buttonClick(sender:)), for: UIControlEvents.touchUpInside)
         view.addSubview(button)
-//        button.snp.makeConstraints{ make in
-//            make.left.equalTo(view)
-//            make.top.equalTo(view).offset(64)
+        button.snp.makeConstraints{ make in
+            make.left.equalTo(view)
+            make.top.equalTo(view).offset(64)
 //            make.width.equalTo(100)
 //            make.height.equalTo(44)
-//        }
+        }
         
         let btn: UIButton = UIButton(type: .custom)
-        btn.setTitle("test", for: .normal)
+        btn.setTitle("abcdefghi", for: .normal)
         btn.setTitleColor(UIColor.blue, for: .normal)
         btn.setImage(UIImage(named:"arraw_down"), for: .normal)
         btn.backgroundColor = UIColor.orange;
         view.addSubview(btn)
+        
+        btn.snp.makeConstraints{ make in
+            make.left.equalTo(view)
+            make.top.equalTo(view).offset(200)
+//            make.width.equalTo(100)
+//            make.height.equalTo(44)
+        }
         
     }
 
