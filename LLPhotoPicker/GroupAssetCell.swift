@@ -9,9 +9,23 @@
 import UIKit
 import Photos
 class GroupAssetCell: UITableViewCell {
-    @IBOutlet weak var countLabel: UILabel!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var cover: UIImageView!
+    var countLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor.black
+        label.font = UIFont.systemFont(ofSize: 14.0)
+        return label
+    }()
+    var titleLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor.black
+        label.font = UIFont.systemFont(ofSize: 16.0)
+        return label
+    }()
+    
+    var cover: UIImageView = {
+        let imgV = UIImageView()
+        return imgV
+    }()
     var groupAsset: GroupAsset? {
         didSet {
             if let asset = groupAsset {
@@ -37,18 +51,36 @@ class GroupAssetCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
-//    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-//        super.init(style: style, reuseIdentifier: reuseIdentifier);
-//        makeUI();
-//    }
-//
-//    required init?(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//    
-//    func makeUI() {
-//        
-//    }
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier);
+        makeUI();
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func makeUI() {
+        contentView.addSubview(cover)
+        cover.snp.makeConstraints { make in
+            make.left.equalTo(contentView).offset(10.0)
+            make.width.height.equalTo(70.0)
+            make.centerY.equalTo(contentView)
+        }
+        
+        contentView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { (make) in
+            make.left.equalTo(cover.snp.right).offset(5.0)
+            make.top.equalTo(cover)
+        }
+        
+        contentView.addSubview(countLabel)
+        countLabel.snp.makeConstraints { (make) in
+            make.left.equalTo(titleLabel)
+            make.bottom.equalTo(cover)
+        }
+        
+    }
     override func prepareForReuse() {
         super.prepareForReuse()
         cover.image = nil

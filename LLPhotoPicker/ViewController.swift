@@ -16,41 +16,22 @@ class ViewController: UIViewController {
     var group:Array<GroupAsset> = []
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBar.isHidden = true
+//        self.navigationController?.navigationBar.isHidden = true
         view.backgroundColor = UIColor.white
-        // Do any additional setup after loading the view, typically from a nib.
-//        loadData()
-        
-//        let button: LLButton = LLButton(frame: CGRect(x:0, y:0, width:100, height:44), layoutTpe: .normal)
+
         let button: LLButton = LLButton(type: .rightLeft)
         button.setTitle("abcdefghi", for: .normal)
         button.setTitleColor(UIColor.blue, for: .normal)
         button.setImage(UIImage(named:"arraw_down"), for: .normal)
         button.backgroundColor = UIColor.orange;
-//        button.addTarget(self, action: #selector(ArtLoginViewController.tapAction(_:), for: UIControlEventTouchUpInside)
         button.addTarget(self, action: #selector(buttonClick(sender:)), for: UIControlEvents.touchUpInside)
         view.addSubview(button)
         button.snp.makeConstraints{ make in
             make.left.equalTo(view)
             make.top.equalTo(view).offset(64)
-//            make.width.equalTo(100)
-//            make.height.equalTo(44)
+            make.width.equalTo(100)
+            make.height.equalTo(44)
         }
-        
-        let btn: UIButton = UIButton(type: .custom)
-        btn.setTitle("abcdefghi", for: .normal)
-        btn.setTitleColor(UIColor.blue, for: .normal)
-        btn.setImage(UIImage(named:"arraw_down"), for: .normal)
-        btn.backgroundColor = UIColor.orange;
-        view.addSubview(btn)
-        
-        btn.snp.makeConstraints{ make in
-            make.left.equalTo(view)
-            make.top.equalTo(view).offset(200)
-//            make.width.equalTo(100)
-//            make.height.equalTo(44)
-        }
-        
     }
 
     func buttonClick(sender: LLButton) {
@@ -72,7 +53,7 @@ class ViewController: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event);
 //        test1();
-//        test()
+        test()
     }
     
     func test() {

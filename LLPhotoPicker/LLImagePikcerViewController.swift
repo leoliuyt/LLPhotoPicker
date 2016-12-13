@@ -20,21 +20,43 @@ class LLImagePikcerViewController: UIViewController {
 
     let screenWidth = UIScreen.main.bounds.size.width
     let screenHeight = UIScreen.main.bounds.size.height
-    var group:Array<GroupAsset> = []
-    var collectionView: UICollectionView!
+    let reuseIdentifier = String(describing: LLGridViewCell.self)
+    
+    private var group:Array<GroupAsset> = []
+    private var collectionView: UICollectionView!
+    
+    let touchBtn: UIButton = {
+        let btn = UIButton(type: .custom)
+        return btn
+    }()
+    
+    let groupView: LLGroupView = {
+       let groupV = LLGroupView()
+        return groupV
+    }()
+    
+    let overLayerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(white: 0, alpha: 0.85)
+        return view
+    }()
+    
     var groupAsset: GroupAsset? {
         didSet {
-            print("\(oldValue)")
+            self.collectionView.reloadData()
         }
     }
     
-    var titleBtn: UIButton!
+    private var titleBtn: LLButton?
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor.white;
         makeUI()
+        loadData()
     }
     
     func makeUI(){
+        makeNaviTitleView()
         makeCollectionView()
     }
     
@@ -52,6 +74,7 @@ class LLImagePikcerViewController: UIViewController {
         collectionFlowLayout.itemSize = itemSize
         
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: collectionFlowLayout)
+        collectionView.backgroundColor = UIColor.white
         view.addSubview(collectionView)
         collectionView.snp.makeConstraints { make in
             make.edges.equalTo(view);
@@ -59,11 +82,42 @@ class LLImagePikcerViewController: UIViewController {
         
         collectionView.collectionViewLayout = collectionFlowLayout
         collectionView.contentInset = UIEdgeInsetsMake(10, 5, 10, 5);
+        
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        
+        collectionView.register(LLGridViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
     }
     
     func makeNaviTitleView() {
-        titleBtn = UIButton(type: .custom)
+        titleBtn = LLButton(type: LLButtonLayoutType.rightLeft)
+        titleBtn?.frame = CGRect(x: 0, y: 0, width: 200, height: 44)
+        titleBtn?.setTitle("相册", for: .normal)
+        titleBtn?.setTitleColor(UIColor.black, for: .normal)
+        titleBtn?.setImage(UIImage(named:"arraw_down"), for: .normal)
+//        titleBtn?.backgroundColor = UIColor.orange;
+        titleBtn?.addTarget(self, action: #selector(buttonClick(sender:)), for: UIControlEvents.touchUpInside)
         self.navigationItem.titleView = titleBtn
+    }
+    
+    func buttonClick(sender: LLButton) {
+        UIView.animate(withDuration: 0.3, animations:{
+            if let imageView = sender.imageView {
+                if imageView.transform.isIdentity {
+                    imageView.transform = CGAffineTransform(rotationAngle: -(CGFloat)(M_PI))
+                    self.showGroupView()
+                } else {
+                    imageView.transform = CGAffineTransform(rotationAngle: 0)
+                    self.dismissGroupView()
+                }
+            }
+        })
+    }
+    
+    func dismissAction(sender: UIButton) {
+        if let button = self.titleBtn {
+            self.buttonClick(sender: button)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -100,18 +154,85 @@ class LLImagePikcerViewController: UIViewController {
                 }
             }
         })
-        
-        print("-------------")
-        
-        for value in self.group {
-            print("name:\(value.collectionTitle)")
-            //            print(value.groupFetchResult)
-            value.groupFetchResult.enumerateObjects({ (asset, index, bool) in
-                print("width:\(asset.pixelWidth),height:\(asset.pixelHeight)")
-            })
+        if let groupAsset = group.first {
+            self.titleBtn?.setTitle(groupAsset.collectionTitle, for: .normal)
+            self.groupAsset = groupAsset
+        } else {
+            self.titleBtn?.setTitle(nil, for: .normal)
         }
+        
+    }
+    
+    func showGroupView() {
+        
+        let tableViewHeight: CGFloat = CGFloat(self.group.count >= 5 ? (min(self.group.count, 5) * 80) : (max(self.group.count, 5) * 80))
+        
+        view.addSubview(overLayerView)
+        overLayerView.snp.makeConstraints { (make) in
+            make.left.bottom.right.equalTo(view)
+            make.top.equalTo(view).offset(64.0)
+        }
+        
+        touchBtn.addTarget(self, action: #selector(dismissAction(sender:)), for: .touchUpInside)
+        overLayerView.addSubview(touchBtn)
+        touchBtn.snp.makeConstraints { (make) in
+            make.left.bottom.right.equalTo(overLayerView)
+            make.height.equalTo(view).offset(CGFloat(screenHeight - tableViewHeight - 64.0))
+        }
+        
+        overLayerView.alpha = 0
+        
+        view.addSubview(groupView)
+        groupView.snp.makeConstraints { (make) in
+            make.left.right.equalTo(overLayerView)
+            make.height.equalTo(tableViewHeight)
+            make.top.equalTo(-tableViewHeight)
+        }
+        
+        groupView.didSelectGroupAsset = { [weak self] gpAsset in
+            self?.groupAsset = gpAsset
+            if let btn = self?.titleBtn, let gp = gpAsset{
+                btn.setTitle(gp.collectionTitle, for: .normal)
+                self?.buttonClick(sender: btn)
+            }
+            self?.collectionView.reloadData()
+        }
+        
+        view.insertSubview(overLayerView, belowSubview: groupView)
+
+        UIView.animate(withDuration: 0.1, animations: {
+            self.overLayerView.alpha = 0.85
+        }, completion:{ complete in
+            self.groupView.group = self.group
+            self.groupView.snp.remakeConstraints { (make) in
+                make.left.top.right.equalTo(self.overLayerView)
+                make.height.equalTo(tableViewHeight)
+            }
+            
+            UIView.animate(withDuration: 0.5, animations: {
+                self.view.layoutIfNeeded()
+            }, completion:{ complete in
+                
+            })
+        })
+    }
+    
+    func dismissGroupView() {
+        let tableViewHeight = self.group.count >= 5 ? (min(self.group.count, 5) * 80) : (max(self.group.count, 5) * 80)
+        groupView.snp.remakeConstraints { (make) in
+            make.left.right.equalTo(overLayerView)
+            make.height.equalTo(tableViewHeight)
+            make.top.equalTo(-tableViewHeight)
+        }
+        UIView.animate(withDuration: 0.5, animations: {
+            self.view.layoutIfNeeded()
+            self.overLayerView.alpha = 0
+        }, completion:{ complete in
+            self.overLayerView.removeFromSuperview()
+        })
     }
 }
+
 extension LLImagePikcerViewController:UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
@@ -124,15 +245,10 @@ extension LLImagePikcerViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: LLGridViewCell.self), for: indexPath) as? LLGridViewCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? LLGridViewCell
             else { fatalError("unexpected cell in collection view") }
         let asset = groupAsset?.groupFetchResult.object(at: indexPath.row)
-        let scale = UIScreen.main.scale
-        let width = (UIScreen.main.bounds.size.width / 4);
-        let thumbnailSize = CGSize(width: width * scale, height: width * scale)
-        LLImageService.shareInstance.requestImage(for: asset!, targetSize: thumbnailSize, resultHandler: {image in
-            cell.thumbnail.image = image
-        })
+        cell.asset = asset
         return cell
     }
     
