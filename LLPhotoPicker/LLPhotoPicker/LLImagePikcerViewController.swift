@@ -22,6 +22,10 @@ class LLImagePikcerViewController: UIViewController {
     let screenHeight = UIScreen.main.bounds.size.height
     let reuseIdentifier = String(describing: LLGridViewCell.self)
     
+    var selectedPhotos: [PHAsset]? = []
+    var didSelectPhotos: ((_ assets:[PHAsset]?) -> Void)?
+    var didSelectOnePhoto: ((_ asset: PHAsset?) -> Void)?
+    
     private var group:Array<GroupAsset> = []
     private var collectionView: UICollectionView!
     
@@ -41,7 +45,7 @@ class LLImagePikcerViewController: UIViewController {
         return view
     }()
     
-    var groupAsset: GroupAsset? {
+    var groupItem: GroupAsset? {
         didSet {
             self.collectionView.reloadData()
         }
@@ -58,6 +62,7 @@ class LLImagePikcerViewController: UIViewController {
     func makeUI(){
         makeNaviTitleView()
         makeCollectionView()
+        makeNaviRight()
     }
     
     func makeCollectionView() {
@@ -98,6 +103,17 @@ class LLImagePikcerViewController: UIViewController {
 //        titleBtn?.backgroundColor = UIColor.orange;
         titleBtn?.addTarget(self, action: #selector(buttonClick(sender:)), for: UIControlEvents.touchUpInside)
         self.navigationItem.titleView = titleBtn
+    }
+    func makeNaviRight() {
+        let rightItem: UIBarButtonItem = UIBarButtonItem(title: "finish", style: .plain, target: self, action: #selector(finishClick(sender:)))
+        self.navigationItem.rightBarButtonItem = rightItem
+    }
+    
+    func finishClick(sender: UIBarButtonItem) {
+        let _ = self.navigationController?.popViewController(animated: true)
+        if let clource = self.didSelectPhotos {
+            clource(self.selectedPhotos)
+        }
     }
     
     func buttonClick(sender: LLButton) {
@@ -156,7 +172,7 @@ class LLImagePikcerViewController: UIViewController {
         })
         if let groupAsset = group.first {
             self.titleBtn?.setTitle(groupAsset.collectionTitle, for: .normal)
-            self.groupAsset = groupAsset
+            self.groupItem = groupAsset
         } else {
             self.titleBtn?.setTitle(nil, for: .normal)
         }
@@ -190,7 +206,7 @@ class LLImagePikcerViewController: UIViewController {
         }
         
         groupView.didSelectGroupAsset = { [weak self] gpAsset in
-            self?.groupAsset = gpAsset
+            self?.groupItem = gpAsset
             if let btn = self?.titleBtn, let gp = gpAsset{
                 btn.setTitle(gp.collectionTitle, for: .normal)
                 self?.buttonClick(sender: btn)
@@ -231,23 +247,30 @@ class LLImagePikcerViewController: UIViewController {
             self.overLayerView.removeFromSuperview()
         })
     }
+    
+    deinit {
+        print("\(self) deinit")
+    }
 }
 
 extension LLImagePikcerViewController:UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        if let asset = groupItem?.groupFetchResult.object(at: indexPath.row) {
+            self.selectedPhotos?.append(asset)
+            print("--------count:\(self.selectedPhotos?.count)")
+        }
     }
 }
 
 extension LLImagePikcerViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return (groupAsset?.groupFetchResult.count)!
+        return (groupItem?.groupFetchResult.count)!
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? LLGridViewCell
             else { fatalError("unexpected cell in collection view") }
-        let asset = groupAsset?.groupFetchResult.object(at: indexPath.row)
+        let asset = groupItem?.groupFetchResult.object(at: indexPath.row)
         cell.asset = asset
         return cell
     }

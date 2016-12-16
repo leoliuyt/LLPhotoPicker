@@ -7,12 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6B1D80171DFF95960003F307 /* LLButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1D80161DFF95960003F307 /* LLButton.swift */; };
-		6B1D801D1DFFA72F0003F307 /* LLGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1D801C1DFFA72F0003F307 /* LLGroupView.swift */; };
-		6B5602911DF7E2E400A93B36 /* LLGridViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5602901DF7E2E400A93B36 /* LLGridViewCell.swift */; };
-		6B5602931DF7E4BE00A93B36 /* LLImagePikcerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5602921DF7E4BE00A93B36 /* LLImagePikcerViewController.swift */; };
-		6BC59E3C1DF973A100AFBC93 /* LLImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC59E3B1DF973A100AFBC93 /* LLImageService.swift */; };
-		9E2492F51DF6FD4F00EF858F /* GroupAssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2492F41DF6FD4F00EF858F /* GroupAssetCell.swift */; };
+		6B3DA63E1E02A20D00C9CB01 /* LLButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3DA6381E02A20D00C9CB01 /* LLButton.swift */; };
+		6B3DA63F1E02A20D00C9CB01 /* LLGroupAssetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3DA6391E02A20D00C9CB01 /* LLGroupAssetCell.swift */; };
+		6B3DA6401E02A20D00C9CB01 /* LLGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3DA63A1E02A20D00C9CB01 /* LLGroupView.swift */; };
+		6B3DA6411E02A20D00C9CB01 /* LLGridViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3DA63B1E02A20D00C9CB01 /* LLGridViewCell.swift */; };
+		6B3DA6421E02A20D00C9CB01 /* LLImagePikcerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3DA63C1E02A20D00C9CB01 /* LLImagePikcerViewController.swift */; };
+		6B3DA6431E02A20D00C9CB01 /* LLImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3DA63D1E02A20D00C9CB01 /* LLImageService.swift */; };
+		6B3DA6451E02A2C700C9CB01 /* PublishViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3DA6441E02A2C700C9CB01 /* PublishViewController.swift */; };
+		6B3DA6471E02A35400C9CB01 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3DA6461E02A35400C9CB01 /* PhotoCell.swift */; };
 		9E4D936F1DF5AA9100142AF8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4D936E1DF5AA9100142AF8 /* AppDelegate.swift */; };
 		9E4D93711DF5AA9100142AF8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4D93701DF5AA9100142AF8 /* ViewController.swift */; };
 		9E4D93761DF5AA9100142AF8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E4D93751DF5AA9100142AF8 /* Assets.xcassets */; };
@@ -23,13 +25,15 @@
 /* Begin PBXFileReference section */
 		3CFCE4BD746C0119971DD3C8 /* Pods-LLPhotoPicker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LLPhotoPicker.release.xcconfig"; path = "Pods/Target Support Files/Pods-LLPhotoPicker/Pods-LLPhotoPicker.release.xcconfig"; sourceTree = "<group>"; };
 		45C489DDF41989D33DD9297A /* Pods-LLPhotoPicker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LLPhotoPicker.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LLPhotoPicker/Pods-LLPhotoPicker.debug.xcconfig"; sourceTree = "<group>"; };
-		6B1D80161DFF95960003F307 /* LLButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLButton.swift; sourceTree = "<group>"; };
-		6B1D801C1DFFA72F0003F307 /* LLGroupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLGroupView.swift; sourceTree = "<group>"; };
-		6B5602901DF7E2E400A93B36 /* LLGridViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLGridViewCell.swift; sourceTree = "<group>"; };
-		6B5602921DF7E4BE00A93B36 /* LLImagePikcerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLImagePikcerViewController.swift; sourceTree = "<group>"; };
-		6BC59E3B1DF973A100AFBC93 /* LLImageService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLImageService.swift; sourceTree = "<group>"; };
+		6B3DA6381E02A20D00C9CB01 /* LLButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLButton.swift; sourceTree = "<group>"; };
+		6B3DA6391E02A20D00C9CB01 /* LLGroupAssetCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLGroupAssetCell.swift; sourceTree = "<group>"; };
+		6B3DA63A1E02A20D00C9CB01 /* LLGroupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLGroupView.swift; sourceTree = "<group>"; };
+		6B3DA63B1E02A20D00C9CB01 /* LLGridViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLGridViewCell.swift; sourceTree = "<group>"; };
+		6B3DA63C1E02A20D00C9CB01 /* LLImagePikcerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLImagePikcerViewController.swift; sourceTree = "<group>"; };
+		6B3DA63D1E02A20D00C9CB01 /* LLImageService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LLImageService.swift; sourceTree = "<group>"; };
+		6B3DA6441E02A2C700C9CB01 /* PublishViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublishViewController.swift; sourceTree = "<group>"; };
+		6B3DA6461E02A35400C9CB01 /* PhotoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 		92C78E48F19C1A68F4A45A5D /* Pods_LLPhotoPicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LLPhotoPicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9E2492F41DF6FD4F00EF858F /* GroupAssetCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupAssetCell.swift; sourceTree = "<group>"; };
 		9E4D936B1DF5AA9100142AF8 /* LLPhotoPicker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LLPhotoPicker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E4D936E1DF5AA9100142AF8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9E4D93701DF5AA9100142AF8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -50,6 +54,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6B3DA6371E02A19B00C9CB01 /* LLPhotoPicker */ = {
+			isa = PBXGroup;
+			children = (
+				6B3DA6381E02A20D00C9CB01 /* LLButton.swift */,
+				6B3DA6391E02A20D00C9CB01 /* LLGroupAssetCell.swift */,
+				6B3DA63A1E02A20D00C9CB01 /* LLGroupView.swift */,
+				6B3DA63B1E02A20D00C9CB01 /* LLGridViewCell.swift */,
+				6B3DA63C1E02A20D00C9CB01 /* LLImagePikcerViewController.swift */,
+				6B3DA63D1E02A20D00C9CB01 /* LLImageService.swift */,
+			);
+			path = LLPhotoPicker;
+			sourceTree = "<group>";
+		};
 		9E4D93621DF5AA9100142AF8 = {
 			isa = PBXGroup;
 			children = (
@@ -71,14 +88,11 @@
 		9E4D936D1DF5AA9100142AF8 /* LLPhotoPicker */ = {
 			isa = PBXGroup;
 			children = (
+				6B3DA6371E02A19B00C9CB01 /* LLPhotoPicker */,
 				9E4D936E1DF5AA9100142AF8 /* AppDelegate.swift */,
 				9E4D93701DF5AA9100142AF8 /* ViewController.swift */,
-				6B1D80161DFF95960003F307 /* LLButton.swift */,
-				6BC59E3B1DF973A100AFBC93 /* LLImageService.swift */,
-				6B5602921DF7E4BE00A93B36 /* LLImagePikcerViewController.swift */,
-				6B1D801C1DFFA72F0003F307 /* LLGroupView.swift */,
-				9E2492F41DF6FD4F00EF858F /* GroupAssetCell.swift */,
-				6B5602901DF7E2E400A93B36 /* LLGridViewCell.swift */,
+				6B3DA6441E02A2C700C9CB01 /* PublishViewController.swift */,
+				6B3DA6461E02A35400C9CB01 /* PhotoCell.swift */,
 				9E4D93751DF5AA9100142AF8 /* Assets.xcassets */,
 				9E4D93771DF5AA9100142AF8 /* LaunchScreen.storyboard */,
 				9E4D937A1DF5AA9100142AF8 /* Info.plist */,
@@ -227,14 +241,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6B1D80171DFF95960003F307 /* LLButton.swift in Sources */,
-				6B5602911DF7E2E400A93B36 /* LLGridViewCell.swift in Sources */,
-				9E2492F51DF6FD4F00EF858F /* GroupAssetCell.swift in Sources */,
 				9E4D93711DF5AA9100142AF8 /* ViewController.swift in Sources */,
-				6B1D801D1DFFA72F0003F307 /* LLGroupView.swift in Sources */,
+				6B3DA6421E02A20D00C9CB01 /* LLImagePikcerViewController.swift in Sources */,
+				6B3DA63E1E02A20D00C9CB01 /* LLButton.swift in Sources */,
+				6B3DA6431E02A20D00C9CB01 /* LLImageService.swift in Sources */,
+				6B3DA6411E02A20D00C9CB01 /* LLGridViewCell.swift in Sources */,
+				6B3DA63F1E02A20D00C9CB01 /* LLGroupAssetCell.swift in Sources */,
+				6B3DA6471E02A35400C9CB01 /* PhotoCell.swift in Sources */,
 				9E4D936F1DF5AA9100142AF8 /* AppDelegate.swift in Sources */,
-				6B5602931DF7E4BE00A93B36 /* LLImagePikcerViewController.swift in Sources */,
-				6BC59E3C1DF973A100AFBC93 /* LLImageService.swift in Sources */,
+				6B3DA6401E02A20D00C9CB01 /* LLGroupView.swift in Sources */,
+				6B3DA6451E02A2C700C9CB01 /* PublishViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

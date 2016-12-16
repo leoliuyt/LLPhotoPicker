@@ -9,7 +9,7 @@
 import UIKit
 
 class LLGroupView: UIView {
-    let reuseIdentifier = String(describing: GroupAssetCell.self)
+    let reuseIdentifier = String(describing: LLGroupAssetCell.self)
     
     var group:Array<GroupAsset>?{
         didSet {
@@ -36,7 +36,7 @@ class LLGroupView: UIView {
     func makeUI() {
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(GroupAssetCell.self, forCellReuseIdentifier: reuseIdentifier)
+        tableView.register(LLGroupAssetCell.self, forCellReuseIdentifier: reuseIdentifier)
         self.addSubview(tableView)
         
         tableView.snp.makeConstraints { (make) in
@@ -74,7 +74,7 @@ extension LLGroupView : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as? GroupAssetCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as? LLGroupAssetCell else {
             fatalError("unexpected cell in collection view")
         }
         

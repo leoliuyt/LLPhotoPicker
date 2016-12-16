@@ -15,9 +15,8 @@ class LLGridViewCell: UICollectionViewCell {
     
     var asset:PHAsset?{
         didSet{
-            let scale = UIScreen.main.scale
             let width = (UIScreen.main.bounds.size.width / 4);
-            let thumbnailSize = CGSize(width: width * scale, height: width * scale)
+            let thumbnailSize = CGSize(width: width, height: width)
             LLImageService.shareInstance.requestImage(for: asset!, targetSize: thumbnailSize, resultHandler: {image in
                 self.thumbnail.image = image
             })
